@@ -21,8 +21,9 @@ public class BookingService implements IBookingService{
         if(hotel.getAvailableRooms()<=0)
             throw new RoomNotAvailableException("We don't have any available rooms. Please try later");
 
-        hotel.setAvailableRooms(hotel.getAvailableRooms()-1);
         Booking booking = new Booking(hotel,customer);
+        hotel.setAvailableRooms(hotel.getAvailableRooms()-1);
+        hotel.getBookings().add(booking);
         customer.getBookings().add(booking);
         return new BookingResponseDto(bookingRepository.save(booking));
 
@@ -36,6 +37,7 @@ public class BookingService implements IBookingService{
         Hotel hotel = booking.getHotel();
         User customer = booking.getCustomer();
         hotel.setAvailableRooms(hotel.getAvailableRooms()+1);
+        hotel.getBookings().remove(booking);
         customer.getBookings().remove(booking);
         bookingRepository.delete(booking);
     }

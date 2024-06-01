@@ -1,12 +1,9 @@
 package com.harshit.stayease.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-
-@Data
+import lombok.*;
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
