@@ -6,6 +6,7 @@ import com.harshit.stayease.service.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class UserController {
 
 
     @PostMapping(USER_ENDPOINT+"/register")
-    public ResponseEntity<UserResponseDto> addExam(@RequestBody @Valid UserRequestDto userRequestDto){
+    public ResponseEntity<UserResponseDto> addUser(@RequestBody @Valid UserRequestDto userRequestDto){
         return ResponseEntity.ok().body(userService.createUser(userRequestDto));
     }
 
@@ -35,11 +36,13 @@ public class UserController {
         return ResponseEntity.ok().body(userService.findUserById(id));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(USER_ENDPOINT+"/{id}")
     public ResponseEntity<UserResponseDto> updateUserById(@PathVariable long id, @RequestBody @Valid UserRequestDto userRequestDto){
         return ResponseEntity.ok().body(userService.updateUserById(id,userRequestDto));
 
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(USER_ENDPOINT+"/{id}")
     public ResponseEntity<String> deleteUserById(@PathVariable long id){
         userService.deleteUserById(id);

@@ -22,21 +22,21 @@ public class HotelController {
     @Autowired
     private IHotelService hotelService;
 
-
-    @PostMapping(HOTEL_ENDPOINT+"/register")
-    public ResponseEntity<HotelResponseDto> addExam(@RequestBody @Valid HotelRequestDto hotelRequestDto
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(HOTEL_ENDPOINT)
+    public ResponseEntity<HotelResponseDto> createHotel(@RequestBody @Valid HotelRequestDto hotelRequestDto
     ){
         return ResponseEntity.ok().body(hotelService.createHotel(hotelRequestDto
         ));
     }
 
-    //@PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @PostMapping(HOTEL_ENDPOINT+"/{hotelId}/book")
     public ResponseEntity<String> bookRoomInHotel(@PathVariable long hotelId, @RequestBody @Valid BookingRequestDto bookingRequestDto){
         hotelService.bookRoom(hotelId, bookingRequestDto);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body("Book rented succesfully");
     }
-//    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     @PostMapping("bookings/{bookingId}")
     public ResponseEntity<String> cancelBookingInHotel(@PathVariable long bookingId){
         hotelService.cancelBooking(bookingId);
@@ -47,11 +47,13 @@ public class HotelController {
         return ResponseEntity.ok().body(hotelService.findAllHotels());
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN','CUSTOMER')")
     @GetMapping(HOTEL_ENDPOINT+"/{id}")
     public ResponseEntity<HotelResponseDto> getHotelById(@PathVariable long id){
         return ResponseEntity.ok().body(hotelService.findHotelById(id));
     }
 
+    @PreAuthorize("hasAuthority('MANAGER')")
     @PutMapping(HOTEL_ENDPOINT+"/{id}")
     public ResponseEntity<HotelResponseDto> updateHotelById(@PathVariable long id, @RequestBody @Valid HotelRequestDto
             hotelRequestDto
@@ -59,6 +61,7 @@ public class HotelController {
         return ResponseEntity.ok().body(hotelService.updateHotelById(id,hotelRequestDto));
 
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping(HOTEL_ENDPOINT+"/{id}")
     public ResponseEntity<String> deleteHotelById(@PathVariable long id){
         hotelService.deleteHotelById(id);

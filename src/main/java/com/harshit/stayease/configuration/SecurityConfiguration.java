@@ -4,6 +4,7 @@ import com.harshit.stayease.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -33,11 +34,11 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/stayease/api/v1/users/register",
-                                                    "/stayease/api/v1/login"
-                        )
+                                        "/stayease/api/v1/login")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET,"/stayease/api/v1/hotels")
                         .permitAll()
                         .anyRequest().authenticated())
-
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
