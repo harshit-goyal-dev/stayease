@@ -34,13 +34,13 @@ public class HotelController {
     @PostMapping(HOTEL_ENDPOINT+"/{hotelId}/book")
     public ResponseEntity<String> bookRoomInHotel(@PathVariable long hotelId, @RequestBody @Valid BookingRequestDto bookingRequestDto){
         hotelService.bookRoom(hotelId, bookingRequestDto);
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body("Book rented succesfully");
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body("Room Booked succesfully");
     }
     @PreAuthorize("hasAuthority('MANAGER')")
-    @PostMapping("bookings/{bookingId}")
+    @DeleteMapping("bookings/{bookingId}")
     public ResponseEntity<String> cancelBookingInHotel(@PathVariable long bookingId){
         hotelService.cancelBooking(bookingId);
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body("Book returned succesfully");
+        return ResponseEntity.status(HttpStatusCode.valueOf(204)).body("Booking canceled succesfully");
     }
     @GetMapping(HOTEL_ENDPOINT)
     public ResponseEntity<List<HotelResponseDto>> getHotels(){
