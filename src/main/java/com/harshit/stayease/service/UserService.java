@@ -35,10 +35,6 @@ public class UserService implements IUserService{
 
     @Override
     public List<UserResponseDto> findAllUsers() {
-//        List<UserResponseDto> users = userRepository.findAll().stream().map(user->
-//                 new UserResponseDto(user.getId(),user.getFirstName()
-//                   ,user.getLastName(),user.getEmail(),user.getRole())
-//        ).collect(Collectors.toList());
         List<UserResponseDto> users = userRepository.findAll().stream().map(
                                         user-> new UserResponseDto(user)).collect(Collectors.toList());
         return users;
@@ -94,7 +90,8 @@ public class UserService implements IUserService{
 
     public User getUserById(long id){
         Optional<User> optionalUser = userRepository.findById(id);
-        if(!optionalUser.isPresent())throw new UserNotFoundException();
+        if(!optionalUser.isPresent())
+            throw new UserNotFoundException("User with the given id doesn't exist");
 
         return optionalUser.get();
     }
